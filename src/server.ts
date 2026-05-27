@@ -7,7 +7,7 @@ const server = express();
 
 server.use(helmet());
 server.use(cors());
-server.use(urlencoded({extended: true}));
+server.use(urlencoded({ extended: true }));
 server.use(express.json());
 
 server.use(mainRouter)
