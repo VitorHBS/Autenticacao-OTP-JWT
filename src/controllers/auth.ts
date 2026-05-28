@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { authSignIn } from "../schemas/auth-signin";
 import { z } from "zod";
 import { getUserByEmail } from "../services/user";
+import { generateOtp } from "../services/otp";
 
 export const signin: RequestHandler = async (req, res) => {
     //Validar os dados recebidos
@@ -15,9 +16,9 @@ export const signin: RequestHandler = async (req, res) => {
     if (!user) return res.json({ error: "Usuário inexistente" })
 
     //Gerar um código OTP para esse 
-    
+    const otp = await generateOtp(user.id);
     //Enviar um Email para esse 
-    
+
     //Devolve o ID do código OTP
-    
+    res.json({ id: otp.id })
 }
