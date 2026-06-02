@@ -1,8 +1,9 @@
 import { RequestHandler } from "express";
 import { authSignIn } from "../schemas/auth-signin";
-import { z } from "zod";
+import { email, z } from "zod";
 import { getUserByEmail } from "../services/user";
 import { generateOtp } from "../services/otp";
+import { sendEmail } from "../libs/mailtrap";
 
 export const signin: RequestHandler = async (req, res) => {
     //Validar os dados recebidos
@@ -17,7 +18,13 @@ export const signin: RequestHandler = async (req, res) => {
 
     //Gerar um código OTP para esse 
     const otp = await generateOtp(user.id);
+
     //Enviar um Email para esse 
+    await sendEmail(
+        user.email,
+        `Seu código de acesso é: ${otp.code}`,
+        `Digite o código de acesso: ${otp.code}`
+    )
 
     //Devolve o ID do código OTP
     res.json({ id: otp.id })
