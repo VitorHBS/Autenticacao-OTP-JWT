@@ -1,9 +1,10 @@
 import { RequestHandler } from "express";
 import { authSignIn } from "../schemas/auth-signin";
 import { email, z } from "zod";
-import { getUserByEmail } from "../services/user";
+import { createUser, getUserByEmail } from "../services/user";
 import { generateOtp } from "../services/otp";
 import { sendEmail } from "../libs/mailtrap";
+import { signupSchema } from "../schemas/auth-signup";
 
 export const signin: RequestHandler = async (req, res) => {
     //Validar os dados recebidos
@@ -28,4 +29,19 @@ export const signin: RequestHandler = async (req, res) => {
 
     //Devolve o ID do código OTP
     res.json({ id: otp.id })
+}
+
+export const signup: RequestHandler = async (req, res) => {
+
+    const data = signupSchema.safeParse(req.body);
+
+    if (!data.success) return res.json({ error: z.treeifyError(data.error) });
+
+    const user = await getUserByEmail(data.data.email);
+
+    if (user) return res.json({ error: "Email já cadastrado" });
+
+    const newUser = await createUser(data.data.email, data.data.name);
+
+    return res.status(201).json({ user: newUser })
 }
