@@ -1,4 +1,4 @@
-import { MailtrapClient } from "mailtrap"
+import { MailtrapClient } from "mailtrap";
 
 export const sendEmail = async (to: string, subject: string, body: string) => {
     const mailtrap = new MailtrapClient({
@@ -8,8 +8,7 @@ export const sendEmail = async (to: string, subject: string, body: string) => {
 
     try {
 
-        await mailtrap
-            .send({
+        await mailtrap.send({
                 from: { name: "Mailtrap Test", email: "sender@example.com" },
                 to: [{ email: to }],
                 subject,
