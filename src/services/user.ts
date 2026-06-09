@@ -1,21 +1,21 @@
 import { prisma } from "../libs/prisma";
 
 export const getUserByEmail = async (email: string) => {
-    const user = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
         where: { email }
     })
     return user
 }
 
 export const getUserById = async (id: number) => {
-    const user = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
         where: { id }
     })
     return user
 }
 
 export const createUser = async (email: string, name: string) => {
-    const user = prisma.user.create({
+    const user = await prisma.user.create({
         data: { name, email }
     });
 

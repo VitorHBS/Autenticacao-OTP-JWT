@@ -7,7 +7,7 @@ export const generateOtp = async (userId: number) => {
     let otpArray: number[] = [];
 
     for (let c = 0; c < 6; c++) {
-        otpArray.push(Math.floor(Math.random() * 9));
+        otpArray.push(Math.floor(Math.random() * 10));
     }
 
     let code = otpArray.join("");
