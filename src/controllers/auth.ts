@@ -1,11 +1,12 @@
 import { RequestHandler } from "express";
 import { authSignIn } from "../schemas/auth-signin";
-import { email, z } from "zod";
+import { email, json, z } from "zod";
 import { createUser, getUserByEmail } from "../services/user";
 import { generateOtp, validateOTP } from "../services/otp";
 import { sendEmail } from "../libs/mailtrap";
 import { signupSchema } from "../schemas/auth-signup";
-import {  validateOtpSchema } from "../schemas/auth-useotp";
+import { createJWT } from "../libs/jwt";
+import { validateOtpSchema } from "../schemas/auth-useotp";
 
 export const signin: RequestHandler = async (req, res) => {
     //Validar os dados recebidos
@@ -56,6 +57,9 @@ export const useOTP: RequestHandler = async (req, res) => {
 
     const user = await validateOTP(data.data.id, data.data.code);
 
-    if(!user) return res.json({error: "Código inválido ou expirado!"});
-    
+    if (!user) return res.json({ error: "Código inválido ou expirado!" });
+
+    const token = await createJWT(user.id);
+
+    return res.json({ token, user })
 }
